@@ -39,8 +39,14 @@ class Mailgun extends \li3_mailer\net\mail\transport\adapter\Simple {
 	 * @var array
 	 */
 	protected $_extraParameters = array(
-		'tag' => 'array', 'campaign', 'dkim', 'deliverytime', 'testmode',
-		'tracking', 'tracking-clicks', 'tracking-opens'
+		'tag' => 'array',
+		'campaign',
+		'dkim' => array(true => 'yes', false => 'no'),
+		'deliverytime',
+		'testmode' => array(true => 'true', false => 'false'),
+		'tracking' => array(true => 'yes', false => 'no'),
+		'tracking-clicks' => array(true => 'yes', false => 'no'),
+		'tracking-opens' => array(true => 'yes', false => 'no', 'htmlonly' => 'htmlonly')
 	);
 
 	/**
