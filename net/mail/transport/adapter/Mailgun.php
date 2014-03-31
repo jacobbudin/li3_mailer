@@ -4,7 +4,7 @@ namespace li3_mailer\net\mail\transport\adapter;
 
 use RuntimeException;
 use lithium\net\http\Media;
-
+use CURLFile;
 
 /**
  * The `Mailgun` adapter sends email through Mailgun's HTTP REST API.
@@ -46,11 +46,10 @@ class Mailgun extends \li3_mailer\net\mail\transport\adapter\Simple {
 	/**
 	 * Deliver a message with Mailgun's HTTP REST API via curl.
 	 *
-	 * _NOTE: Uses the `messages.mime` API endpoint, not the
-	 * `messages` API endpoint (because a, if embedded attachments
-	 * were used Mailgun would alter the `Content-ID` for them, and
-	 * b, cURL needs to have a local file to send as file, but
-	 * not all attachments have a path), see `_parameters()`._
+	 * _NOTE_: We're not sending full MIME messages to the API. As
+	 * Mailgun will change embedded attachment Content-IDs, embedded
+	 * attachment cannot currently be used with this adapter. Also
+	 * attachments are limited to actually existing files.
 	 *
 	 * @see li3_mailer\net\mail\transport\adapter\Mailgun::_parameters()
 	 * @see http://documentation.mailgun.net/api-sending.html
@@ -143,12 +142,18 @@ class Mailgun extends \li3_mailer\net\mail\transport\adapter\Simple {
 		if ($subject = $message->subject) {
 			$parameters += compact('subject');
 		}
-
 		if ($text = $message->body('text')) {
 			$parameters += compact('text');
 		}
 		if ($html = $message->body('html')) {
 			$parameters += compact('html');
+		}
+		foreach ($message->attachments() as $key => $item) {
+			$parameters["attachment[{$key}]"] = new CURLFile(
+				$item['path'],
+				$item['content-type'],
+				$item['filename']
+			);
 		}
 		foreach ($this->_extraParameters as $name => $type) {
 			if (is_int($name)) {
