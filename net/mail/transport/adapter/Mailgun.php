@@ -62,17 +62,16 @@ class Mailgun extends \li3_mailer\net\mail\transport\adapter\Simple {
 		list($url, $auth, $parameters) = $this->_parameters($message, $options);
 
 		$curl = curl_init($url);
-
 		curl_setopt_array($curl, array(
-			CURLOPT_HTTPAUTH =>  CURLAUTH_BASIC,
+			CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
 			CURLOPT_USERPWD => "{$auth['username']}:{$auth['password']}",
 			CURLOPT_RETURNTRANSFER => 1,
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => $parameters
 		));
 		$result = curl_exec($curl);
-
 		$info = curl_getinfo($curl);
+
 		if ($info['http_code'] != '200') {
 			$result = false;
 		}
