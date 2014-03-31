@@ -93,7 +93,7 @@ class Simple extends \li3_mailer\net\mail\Transport {
 			$headers['Content-Type'] = "{$contentType};charset=\"{$charset}\"";
 			$body = wordwrap($message->body($type), 70);
 		} else {
-			$boundary = uniqid('LI3_MAILER_SIMPLE_');
+			$boundary = uniqid('boundary_');
 			$contentType = "multipart/alternative;boundary=\"{$boundary}\"";
 			$headers['Content-Type'] = $contentType;
 			$body = "This is a multi-part message in MIME format.\n\n";
