@@ -492,8 +492,8 @@ class Message extends \lithium\core\Object {
 	 * @see li3_mailer\net\mail\Message::embed()
 	 * @param string $path Path to file, may be null.
 	 * @param array $options Available options are:
-	 *        - `'data'` _string_: content body (if `$path` is a string
-	 *          this is ignored),
+	 *        - `'data'` _string_, _resource_: content body or open stream
+	 *          (if `$path` is a string this is ignored),
 	 *        - `'disposition'` _string_: disposition, usually `'attachment'` or
 	 *          `'inline'`, defaults to `'attachment'`,
 	 *        - `'content-type'` _string_: content-type, defaults to
@@ -541,10 +541,10 @@ class Message extends \lithium\core\Object {
 			}
 			$options = compact('path', 'attachPath') + $options + $defaults;
 		} else {
-			if (!is_string($options['data'])) {
+			if (!is_string($options['data']) && !is_resource($options['data'])) {
 				$type = gettype($options['data']);
-				$error = "Data should be a string, `{$type}` given, " .
-					"cannot attach.";
+				$error  = "Data should be a string or resource, `{$type}` given, ";
+				$error .= "cannot attach.";
 				throw new RuntimeException($error);
 			}
 			if (isset($options['filename'])) {

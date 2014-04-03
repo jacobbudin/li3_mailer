@@ -115,6 +115,9 @@ class Simple extends \li3_mailer\net\mail\Transport {
 						$error = "Can not attach path `{$attachment['path']}`.";
 						throw new RuntimeException($error);
 					}
+				} elseif (is_resource($attachment['data'])) {
+					rewind($attachment['data']);
+					$content = stream_get_contents($attachment['data']);
 				} else {
 					$content = $attachment['data'];
 				}

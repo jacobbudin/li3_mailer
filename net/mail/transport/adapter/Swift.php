@@ -192,6 +192,10 @@ class Swift extends \li3_mailer\net\mail\Transport {
 			if (isset($attachment['path'])) {
 				$path = $attachment['path'];
 				$swiftAttachment = Swift_Attachment::fromPath($path);
+			} elseif (is_resource($attachment['data'])) {
+				rewind($attachment['data']);
+				$data = stream_get_contents($attachment['data']);
+				$swiftAttachment = Swift_Attachment::newInstance($data);
 			} else {
 				$data = $attachment['data'];
 				$swiftAttachment = Swift_Attachment::newInstance($data);
