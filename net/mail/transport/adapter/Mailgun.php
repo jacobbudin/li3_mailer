@@ -43,6 +43,8 @@ class Mailgun extends \li3_mailer\net\mail\transport\adapter\Simple {
 		'tracking', 'tracking-clicks', 'tracking-opens'
 	);
 
+	protected $_temporaryFiles = array();
+
 	/**
 	 * Deliver a message with Mailgun's HTTP REST API via curl.
 	 *
@@ -148,6 +150,16 @@ class Mailgun extends \li3_mailer\net\mail\transport\adapter\Simple {
 			$parameters += compact('html');
 		}
 		foreach ($message->attachments() as $key => $item) {
+			if (isset($item['data'])) {
+				if (is_resource($item['data'])) {
+					rewind($item['data']);
+				}
+				$file = tempnam(realpath(sys_get_temp_dir()) . '/', 'li3_mailer_attachment');
+				$this->_temporaryFiles[] = $file;
+
+				file_put_contents($file, $item['data']);
+				$item['path'] = $file;
+			}
 			$parameters["attachment[{$key}]"] = new CURLFile(
 				$item['path'],
 				$item['content-type'],
@@ -179,6 +191,14 @@ class Mailgun extends \li3_mailer\net\mail\transport\adapter\Simple {
 		$auth = array('username' => 'api', 'password' => $config['key']);
 
 		return array($url, $auth, $parameters);
+	}
+
+	public function __destruct() {
+		foreach ($this->_temporaryFiles as $file) {
+			if (file_exists($file)) {
+				unlink($file);
+			}
+		}
 	}
 }
 
