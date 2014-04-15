@@ -37,7 +37,7 @@
     },
     "autoload": {
         "psr-4": {
-            "li3_mailer": ""
+            "li3_mailer\\": ""
         }
     }
 }
