@@ -36,8 +36,8 @@
         "composer/installers": "~1.0"
     },
     "autoload": {
-        "psr-0": {
-            "li3_mailer": "/"
+        "psr-4": {
+            "li3_mailer": ""
         }
     }
 }
