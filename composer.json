@@ -1,5 +1,5 @@
 {
-    "name": "atelierdisko/li3_mailer",
+    "name": "jacobbudin/li3_mailer",
     "type": "lithium-library",
     "description": "A plugin for sending email messages from your Lithium application.",
     "keywords": ["php", "mail", "mailgun", "smtp", "swiftmailer", "lithium", "li3"],
